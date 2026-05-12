@@ -92,8 +92,8 @@ function Clients () {
                             <span className="dropdown">
                               <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                               <div className="dropdown-menu dropdown-menu-end">
-                                <a className="dropdown-item" href="#"> Action </a>
-                                <a className="dropdown-item" href="#"> Another action </a>
+                                <a className="dropdown-item" href="#"> Edit </a>
+                                <a className="dropdown-item" href="#"> Print </a>
                               </div>
                             </span>
                           </td>
@@ -114,8 +114,8 @@ function Clients () {
                             <span className="dropdown">
                               <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                               <div className="dropdown-menu dropdown-menu-end">
-                                <a className="dropdown-item" href="#"> Action </a>
-                                <a className="dropdown-item" href="#"> Another action </a>
+                                <a className="dropdown-item" href="#"> Edit </a>
+                                <a className="dropdown-item" href="#"> Print </a>
                               </div>
                             </span>
                           </td>
@@ -136,8 +136,8 @@ function Clients () {
                             <span className="dropdown">
                               <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                               <div className="dropdown-menu dropdown-menu-end">
-                                <a className="dropdown-item" href="#"> Action </a>
-                                <a className="dropdown-item" href="#"> Another action </a>
+                                <a className="dropdown-item" href="#"> Edit </a>
+                                <a className="dropdown-item" href="#"> Print </a>
                               </div>
                             </span>
                           </td>
@@ -158,8 +158,8 @@ function Clients () {
                             <span className="dropdown">
                               <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                               <div className="dropdown-menu dropdown-menu-end">
-                                <a className="dropdown-item" href="#"> Action </a>
-                                <a className="dropdown-item" href="#"> Another action </a>
+                                <a className="dropdown-item" href="#"> Edit </a>
+                                <a className="dropdown-item" href="#"> Print </a>
                               </div>
                             </span>
                           </td>
@@ -180,8 +180,8 @@ function Clients () {
                             <span className="dropdown">
                               <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                               <div className="dropdown-menu dropdown-menu-end">
-                                <a className="dropdown-item" href="#"> Action </a>
-                                <a className="dropdown-item" href="#"> Another action </a>
+                                <a className="dropdown-item" href="#"> Edit </a>
+                                <a className="dropdown-item" href="#"> Print </a>
                               </div>
                             </span>
                           </td>
@@ -202,8 +202,8 @@ function Clients () {
                             <span className="dropdown">
                               <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                               <div className="dropdown-menu dropdown-menu-end">
-                                <a className="dropdown-item" href="#"> Action </a>
-                                <a className="dropdown-item" href="#"> Another action </a>
+                                <a className="dropdown-item" href="#"> Edit </a>
+                                <a className="dropdown-item" href="#"> Print </a>
                               </div>
                             </span>
                           </td>
@@ -224,8 +224,8 @@ function Clients () {
                             <span className="dropdown">
                               <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                               <div className="dropdown-menu dropdown-menu-end">
-                                <a className="dropdown-item" href="#"> Action </a>
-                                <a className="dropdown-item" href="#"> Another action </a>
+                                <a className="dropdown-item" href="#"> Edit </a>
+                                <a className="dropdown-item" href="#"> Print </a>
                               </div>
                             </span>
                           </td>
@@ -246,8 +246,8 @@ function Clients () {
                             <span className="dropdown">
                               <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                               <div className="dropdown-menu dropdown-menu-end">
-                                <a className="dropdown-item" href="#"> Action </a>
-                                <a className="dropdown-item" href="#"> Another action </a>
+                                <a className="dropdown-item" href="#"> Edit </a>
+                                <a className="dropdown-item" href="#"> Print </a>
                               </div>
                             </span>
                           </td>

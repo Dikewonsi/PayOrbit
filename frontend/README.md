@@ -1,16 +1,87 @@
-# React + Vite
+# PayOrbit Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React/Vite frontend for the PayOrbit invoice and client management interface.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React
+- React Router
+- Vite
+- ESLint
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Install dependencies:
 
-## Expanding the ESLint configuration
+```bash
+npm install
+```
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Start the development server:
+
+```bash
+npm run dev
+```
+
+Build for production:
+
+```bash
+npm run build
+```
+
+Preview the production build:
+
+```bash
+npm run preview
+```
+
+Run linting:
+
+```bash
+npm run lint
+```
+
+## Current Routes
+
+The app uses React Router with a shared `MainLayout` for authenticated application pages.
+
+- `/login` - login page
+- `/` - redirects to `/dashboard`
+- `/dashboard` - dashboard overview
+- `/clients` - client list
+- `/clients/create` - create client page
+- `/invoices` - invoice list
+- `/invoices/create` - create invoice page
+
+## Project Structure
+
+```text
+frontend/
+  public/
+    favicon.svg
+    icons.svg
+  src/
+    components/
+      Navbar.jsx
+    layouts/
+      MainLayout.jsx
+    pages/
+      Clients.jsx
+      CreateClient.jsx
+      CreateInvoice.jsx
+      Dashboard.jsx
+      Invoices.jsx
+      Login.jsx
+    App.jsx
+    main.jsx
+  package.json
+  vite.config.js
+```
+
+## Application Notes
+
+- `src/App.jsx` owns the route configuration.
+- `src/layouts/MainLayout.jsx` wraps the main application pages and renders the navigation.
+- `src/components/Navbar.jsx` contains the PayOrbit navigation links and active route styling.
+- Page-level UI belongs in `src/pages`.
+- Static assets belong in `public` when they need stable public URLs, or `src/assets` when they are imported by components.
