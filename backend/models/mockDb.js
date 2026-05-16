@@ -20,7 +20,14 @@ const mockDb = {
 
     invoices: [
         {
-            
+         id: 1,
+         clientId: 1,
+         invoiceNumber: 'INV-001',
+         title: 'Website design',
+         amount: 250000,
+         status: 'unpaid',
+         issueDate: '2026-05-16',
+         dueDate: '2026-05-30'   
         }
     ]
 };
