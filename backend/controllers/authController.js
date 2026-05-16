@@ -1,4 +1,4 @@
-import authService from '../services/authService.js';
+import authService from '../services/authService.js'; 
 
 const login = async (req, res, next) => {
     try {
@@ -13,7 +13,7 @@ const login = async (req, res, next) => {
         const result = await authService.loginAdmin(email, password);
 
         res.status(200).json({
-            message: 'Login Successful',
+            msg: 'Login Successful',
             admin: result.admin,
             token: result.token
         });
