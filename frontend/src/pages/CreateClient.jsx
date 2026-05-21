@@ -1,4 +1,54 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import apiClient from '../api/apiClient';
+
+
 function CreateClient() {
+
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    company: '',
+    address: '',
+    dateAdded: ''
+  });
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((previousData) => ({
+      ...previousData,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      setError('');
+      setLoading(true);
+
+      await apiClient('/clients', {
+        method: 'POST',
+        body: JSON.stringify(formData)
+      });
+
+      navigate('/clients');
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   return (
     <div className="page-wrapper">
       <div className="page-header d-print-none">
@@ -15,14 +65,17 @@ function CreateClient() {
             </div>
 
             <div className="card-body">
-              <form>
+              <form onSubmit={handleSubmit}>
                 <div className="row">
                   <div className="col-md-6 mb-3">
                     <label className="form-label required">Full Name</label>
                     <input
                       type="text"
+                      name="name"
                       className="form-control"
                       placeholder="John Doe"
+                      value={formData.name}
+                      onChange={handleChange}
                     />
                   </div>
 
@@ -30,8 +83,11 @@ function CreateClient() {
                     <label className="form-label required">Email Address</label>
                     <input
                       type="email"
+                      name="email"
                       className="form-control"
                       placeholder="john@example.com"
+                      value={formData.email}
+                      onChange={handleChange}
                     />
                   </div>
 
@@ -39,8 +95,11 @@ function CreateClient() {
                     <label className="form-label">Phone Number</label>
                     <input
                       type="text"
+                      name="phone"
                       className="form-control"
                       placeholder="+234 800 000 0000"
+                      value={formData.phone}
+                      onChange={handleChange}
                     />
                   </div>
 
@@ -48,17 +107,49 @@ function CreateClient() {
                     <label className="form-label">Company</label>
                     <input
                       type="text"
+                      name="company"
                       className="form-control"
                       placeholder="Acme Inc."
+                      value={formData.company}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Address</label>
+                    <input
+                      type="text"
+                      name="address"
+                      className="form-control"
+                      placeholder="Manhattan, New York"
+                      value={formData.address}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Date Added</label>
+                    <input
+                      type="date"
+                      name="dateAdded"
+                      className="form-control"
+                      placeholder="Acme Inc."
+                      value={formData.dateAdded}
+                      onChange={handleChange}
                     />
                   </div>
                 </div>
 
                 <div className="card-footer bg-transparent mt-3 px-0 pb-0">
-                  <button type="submit" className="btn btn-primary">
-                    Create Client
+                  <button type="submit" className="btn btn-primary" disabled={loading}>
+                    {loading ? 'Creating...' : 'Create Client'}
                   </button>
-                  <button type="button" className="btn btn-link">
+                  
+                  <button 
+                    type="button" 
+                    className="btn btn-link"
+                    onClick={() => navigate('/clients')}
+                  >
                     Cancel
                   </button>
                 </div>

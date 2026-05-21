@@ -20,11 +20,11 @@ const getClientById = (id) => {
 }
 
 const createClient = (clientData) => {
-    const { name, address, date } = clientData;
+    const { name, email, phone, company, address, dateAdded } = clientData;
 
     // Check for emptiness in forms. later on would make more secure.
-    if(!name || !address || !date) {
-        const error = new Error('Name, address, and date are required');
+    if(!name || !email || !phone || !company || !address || !dateAdded) {
+        const error = new Error('All client fields are required');
         error.status = 400;
         throw error;
     }
@@ -33,8 +33,11 @@ const createClient = (clientData) => {
     const newClient = {
         id: mockDb.clients.length + 1,
         name,
+        email,
+        phone,
+        company,
         address,
-        date
+        dateAdded
     }
 
     // add client to mock DB
