@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const icons = {
   dashboard: (
@@ -74,6 +74,16 @@ function NavIcon({ name }) {
 }
 
 function Navbar() {
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('payorbit_token');
+    localStorage.removeItem('payorbit_admin');
+
+    navigate('/login');
+  }
+
   return (
     <>
       <header className="navbar navbar-expand-md d-print-none">
@@ -110,10 +120,10 @@ function Navbar() {
                   Dashboard
                 </NavLink>
                 <div className="dropdown-divider"></div>
-                <NavLink className="dropdown-item" to="/login">
+                <button className="dropdown-item" type="button" onClick={handleLogout}>
                   <NavIcon name="logout" />
                   Sign out
-                </NavLink>
+                </button>
               </div>
             </div>
           </div>

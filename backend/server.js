@@ -1,5 +1,6 @@
 import express from 'express';
 import helmet from 'helmet';
+import cors from 'cors';
 
 import authRoutes from './routes/authRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
@@ -32,6 +33,11 @@ app.use(express.json({ limit: '10kb' }));
 app.use(express.urlencoded({
     extended: false,
     limit: '10kb'
+}));
+
+// Add cors so frontend and backend can communicate
+app.use(cors({
+    origin: 'http://localhost:5173'
 }));
 
 /*

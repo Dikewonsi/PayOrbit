@@ -7,6 +7,7 @@ import {
 	} from 'react-router-dom'
 
 import MainLayout from "./layouts/MainLayout";
+import ProtectedRoute from './components/ProtectedRoute';
 // Pages
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -21,13 +22,15 @@ const App = () => {
         <>
           <Route path="/login" element={<Login />} />
 
-	          <Route path='/' element={<MainLayout/>}>
-	            <Route index element={<Navigate to="/dashboard" replace />} />
-	            <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/clients" element={<Clients />} />
-              <Route path="/invoices" element={<Invoices />} />
-              <Route path="/invoices/create" element={<CreateInvoice />} />
-              <Route path="/clients/create" element={<CreateClient />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path='/' element={<MainLayout/>}>
+                <Route index element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/clients" element={<Clients />} />
+                <Route path="/invoices" element={<Invoices />} />
+                <Route path="/invoices/create" element={<CreateInvoice />} />
+                <Route path="/clients/create" element={<CreateClient />} />
+            </Route>
           </Route>
         </>
         

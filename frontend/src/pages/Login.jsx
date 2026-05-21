@@ -1,4 +1,43 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import apiClient from '../api/apiClient';
+
 function Login() {
+
+    const navigate = useNavigate();
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        try {
+            setError('');
+            setLoading(true);
+
+            const response = await apiClient('/auth/login', {
+                method: 'POST',
+                body: JSON.stringify({
+                    email,
+                    password
+                })
+            });
+
+            localStorage.setItem('payorbit_token', response.data.token);
+            localStorage.setItem('payorbit_admin', JSON.stringify(response.data.admin));
+
+            navigate('/dashboard');
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
   return (
     <div>
         <div className="page page-center">
@@ -21,10 +60,22 @@ function Login() {
                 <div className="card card-md">
                     <div className="card-body">
                         <h2 className="h2 text-center mb-4">Login to your account</h2>
-                        <form action="./" method="get" autoComplete="off" noValidate>
+                        {error && (
+                            <div className="alert alert-danger" role="alert">
+                                {error}
+                            </div>
+                        )}
+                        <form onSubmit={handleSubmit} autoComplete="off" noValidate>
                             <div className="mb-3">
                                 <label className="form-label">Email address</label>
-                                <input type="email" className="form-control" placeholder="your@email.com" autoComplete="off" />
+                                <input 
+                                    type="email"
+                                    className="form-control"
+                                    placeholder="admin@email.com"
+                                    autoComplete="off"
+                                    value={email}
+                                    onChange={(event) => setEmail(event.target.value)}
+                                />    
                             </div>
                             <div className="mb-2">
                                 <label className="form-label">
@@ -34,7 +85,14 @@ function Login() {
                                 </span>
                                 </label>
                                 <div className="input-group input-group-flat">
-                                <input type="password" className="form-control" placeholder="Your password" autoComplete="off" />
+                                <input 
+                                    type="password"
+                                    className="form-control"
+                                    placeholder="your password"
+                                    autoComplete="off"
+                                    value={password}
+                                    onChange={(event) => setPassword(event.target.value)} 
+                                />
                                 <span className="input-group-text">
                                     <a href="#" className="link-secondary" title="Show password" data-bs-toggle="tooltip">
                                     <svg
@@ -62,9 +120,11 @@ function Login() {
                                 <input type="checkbox" className="form-check-input" />
                                 <span className="form-check-label">Remember me on this device</span>
                                 </label>
-                            </div>
+                            </div>    
                             <div className="form-footer">
-                                <button type="submit" className="btn btn-primary w-100">Sign in</button>
+                                <button type="submit" className="btn btn-primary w-100" disabled={loading}>
+                                    {loading ? 'Signing in...' : 'Sign in'}
+                                </button>
                             </div>
                         </form>
                     </div>

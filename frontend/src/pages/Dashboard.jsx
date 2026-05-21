@@ -1,8 +1,9 @@
-const stats = [
+import { useEffect, useState } from 'react';
+import apiClient from '../api/apiClient';
+
+const statTemplates = [
   {
     title: "Total Revenue",
-    value: "$48,240",
-    change: "+12.5%",
     trend: "up",
     color: "primary",
     icon: (
@@ -14,8 +15,6 @@ const stats = [
   },
   {
     title: "Outstanding Balance",
-    value: "$12,860",
-    change: "8 unpaid",
     trend: "neutral",
     color: "warning",
     icon: (
@@ -29,8 +28,6 @@ const stats = [
   },
   {
     title: "Overdue Invoices",
-    value: "6",
-    change: "$4,180 due",
     trend: "down",
     color: "danger",
     icon: (
@@ -43,8 +40,6 @@ const stats = [
   },
   {
     title: "Active Clients",
-    value: "42",
-    change: "+4 this month",
     trend: "up",
     color: "success",
     icon: (
@@ -58,19 +53,17 @@ const stats = [
   },
 ];
 
-const invoices = [
-  ["INV-1048", "Website redesign", "Carlson Limited", "Due today", "Pending", "$2,400"],
-  ["INV-1047", "Monthly retainer", "Adobe", "Paid Apr 28", "Paid", "$1,200"],
-  ["INV-1046", "Brand identity", "Bluewolf", "3 days overdue", "Overdue", "$3,650"],
-  ["INV-1045", "Landing page", "Salesforce", "Due May 6", "Sent", "$1,500"],
-  ["INV-1044", "Consulting", "Apple", "Paid Apr 22", "Paid", "$2,950"],
-];
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    maximumFractionDigits: 0
+  }).format(amount);
+};
 
-const overdueItems = [
-  ["Bluewolf", "$3,650", "3 days late"],
-  ["Printic", "$530", "8 days late"],
-  ["Tabdaq", "$300", "12 days late"],
-];
+const formatStatus = (status) => {
+  return status.charAt(0).toUpperCase() + status.slice(1);
+}
 
 function Icon({ children }) {
   return (
@@ -125,14 +118,92 @@ function StatCard({ stat }) {
 
 function statusClass(status) {
   return {
+    paid: "success",
+    pending: "warning",
+    overdue: "danger",
+    sent: "primary",
     Paid: "success",
     Pending: "warning",
     Overdue: "danger",
     Sent: "primary",
-  }[status];
+  }[status] || "secondary";
 }
 
 function Dashboard() {
+
+  const [summary, setSummary] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    const getDashboard = async () => {
+      try {
+          const response = await apiClient('/dashboard');
+          setSummary(response.data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getDashboard();
+  }, []);
+
+  if (loading) {
+    return <div className='page-wrapper p-4'>Loading Dashboard...</div>;
+  }
+
+  if (error) {
+    return <div className='page-wrapper p-4 text-danger'>{error}</div>
+  }
+
+  const stats = [
+    {
+      ...statTemplates[0],
+      title: "Total Revenue",
+      value: formatCurrency(summary.totalRevenue),
+      change: `${summary.paidInvoices} paid invoices`,
+      trend: "up",
+      color: "primary"
+    },
+    {
+      ...statTemplates[1],
+      title: "Total Invoices",
+      value: summary.totalInvoices,
+      change: `${summary.unpaidInvoices} unpaid`,
+      trend: "neutral",
+      color: "warning"
+    },
+    {
+      ...statTemplates[2],
+      title: "Paid Invoices",
+      value: summary.paidInvoices,
+      change: `${summary.totalInvoices} total invoices`,
+      trend: "up",
+      color: "success"
+    },
+    {
+      ...statTemplates[3],
+      title: "Total Clients",
+      value: summary.totalClients,
+      change: "Active clients",
+      trend: "up",
+      color: "primary"
+    }
+  ];
+
+  const recentInvoices = summary.recentInvoices;
+
+  const paidPercent = summary.totalInvoices
+    ? Math.round((summary.paidInvoices / summary.totalInvoices) * 100)
+    : 0;
+
+  const unpaidPercent = summary.totalInvoices
+    ? Math.round((summary.unpaidInvoices / summary.totalInvoices) * 100)
+    : 0;
+
+    
   return (
     <div className="page">
       <div className="page-wrapper">
@@ -183,29 +254,22 @@ function Dashboard() {
                       <thead>
                         <tr>
                           <th>Invoice</th>
-                          <th>Subject</th>
+                          <th>Title</th>
                           <th>Client</th>
-                          <th>Due status</th>
+                          <th>Amount</th>
                           <th>Status</th>
-                          <th className="text-end">Amount</th>
+                          <th>Due Date</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {invoices.map(([number, subject, client, due, status, amount]) => (
-                          <tr key={number}>
-                            <td className="text-secondary">{number}</td>
-                            <td>
-                              <a href="/invoices" className="text-reset">
-                                {subject}
-                              </a>
-                            </td>
-                            <td>{client}</td>
-                            <td className="text-secondary">{due}</td>
-                            <td>
-                              <span className={`badge bg-${statusClass(status)} me-1`}></span>
-                              {status}
-                            </td>
-                            <td className="text-end fw-medium">{amount}</td>
+                        {recentInvoices.map((invoice) => (
+                          <tr key={invoice.id}>
+                            <td className='text-secondary'>{invoice.invoiceNumber}</td>
+                            <td>{invoice.title}</td>
+                            <td>{invoice.clientId}</td>
+                            <td>{formatCurrency(invoice.amount)}</td>
+                            <td><span className={`badge bg-${statusClass(invoice.status)} me-1`}></span>{invoice.status}</td>
+                            <td>{invoice.dueDate}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -220,47 +284,27 @@ function Dashboard() {
                     <h3 className="card-title">Collections health</h3>
                     <div className="d-flex align-items-center mb-2">
                       <div className="subheader">Paid vs outstanding</div>
-                      <div className="ms-auto text-secondary">74%</div>
+                      <div className="ms-auto text-secondary">{paidPercent}%</div>
                     </div>
                     <div className="progress progress-separated mb-3">
-                      <div className="progress-bar bg-success" style={{ width: "74%" }} aria-label="Paid"></div>
-                      <div className="progress-bar bg-warning" style={{ width: "18%" }} aria-label="Outstanding"></div>
-                      <div className="progress-bar bg-danger" style={{ width: "8%" }} aria-label="Overdue"></div>
+                      <div className="progress-bar bg-success" style={{ width: `${paidPercent}%` }} aria-label="Paid"></div>
+                      <div className="progress-bar bg-warning" style={{ width: `${unpaidPercent}%` }} aria-label="Outstanding"></div>
                     </div>
                     <div className="row g-2">
                       <div className="col">
-                        <div className="h3 mb-0">$36.1k</div>
+                        <div className="h3 mb-0">{formatCurrency(summary.totalRevenue)}</div>
                         <div className="text-secondary">Collected</div>
                       </div>
                       <div className="col">
-                        <div className="h3 mb-0">$12.9k</div>
-                        <div className="text-secondary">Open</div>
+                        <div className="h3 mb-0">{summary.unpaidInvoices}</div>
+                        <div className="text-secondary">Open Invoices</div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="card mt-3">
-                  <div className="card-header">
-                    <h3 className="card-title">Overdue watchlist</h3>
-                  </div>
-                  <div className="list-group list-group-flush">
-                    {overdueItems.map(([client, amount, age]) => (
-                      <div className="list-group-item" key={client}>
-                        <div className="row align-items-center">
-                          <div className="col-auto">
-                            <span className="status-dot status-dot-animated bg-danger d-block"></span>
-                          </div>
-                          <div className="col text-truncate">
-                            <div className="text-body d-block">{client}</div>
-                            <div className="d-block text-secondary text-truncate mt-n1">{age}</div>
-                          </div>
-                          <div className="col-auto fw-medium">{amount}</div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                {/* Over Due Invoices Here*/}
+
               </div>
             </div>
           </div>
