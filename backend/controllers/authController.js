@@ -13,9 +13,12 @@ const login = async (req, res, next) => {
         const result = await authService.loginAdmin(email, password);
 
         res.status(200).json({
-            msg: 'Login Successful',
-            admin: result.admin,
-            token: result.token
+            success: true,
+            message: 'Login Successful',
+            data: {
+                admin: result.admin,
+                token: result.token
+            }
         });
     } catch (error) {
         next(error);

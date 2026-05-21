@@ -1,13 +1,10 @@
 import express from 'express';
 import authMiddleware from '../middleware/authMiddleware.js';
+import dashboardController from '../controllers/dashboardController.js';
+
 
 const dashboardRoutes = express.Router();
 
-dashboardRoutes.get('/', authMiddleware, (req, res) => {
-    res.status(200).json({
-        message: 'Dashboard route is protected',
-        user: req.user
-    });
-});
+dashboardRoutes.get('/', authMiddleware, dashboardController.getDashboard);
 
 export default dashboardRoutes;

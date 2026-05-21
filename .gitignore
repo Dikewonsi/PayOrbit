@@ -1,2 +1,5 @@
 templates
 reference
+node_modules
+dist
+.env

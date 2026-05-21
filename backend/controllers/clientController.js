@@ -5,9 +5,12 @@ const getClients =( req, res, next ) => {
         const clients = clientService.getAllClients();
 
         res.status(200).json({
+            success: true,
             message: 'Clients retrieved successfully',
-            count: clients.length,
-            clients
+            data: {
+                count: clients.length,
+                clients
+            }
         });
     } catch (error) {
         next(error)
@@ -19,8 +22,11 @@ const getClient = ( req, res, next ) => {
         const client = clientService.getClientById(req.params.id);
 
         res.status(200).json({
+            success: true,
             message: 'Client retrieved successfully',
-            client
+            data: {
+                client
+            }
         });
     } catch(error) {
         next(error)
@@ -32,8 +38,11 @@ const createClient = ( req, res, next ) => {
         const client = clientService.createClient(req.body);
 
         res.status(201).json({
+            success: true,
             message: 'Client created successfuly',
-            client
+            data: {
+                client
+            }
         })
     } catch (error) {
         next(error)
@@ -45,8 +54,11 @@ const updateClient = ( req, res, next ) => {
         const client = clientService.updateClient(req.params.id, req.body);
 
         res.status(200).json({
+            success: true,
             message: 'Client updated successfuly',
-            client
+            data: {
+                client
+            }
         });
     } catch (error) {
         next(error)
@@ -58,8 +70,11 @@ const deleteClient = ( req, res, next ) => {
         const client = clientService.deleteClient(req.params.id);
 
         res.status(200).json({
+            success: true,
             message: 'Client deleted successfully',
-            client
+            data: {
+                client
+            }
         })
     } catch (error) {
         next(error);
