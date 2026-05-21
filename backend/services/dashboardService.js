@@ -21,7 +21,7 @@ const getDashboardSummary = () => {
         .sort((a, b) => {
             return new Date(b.issueDate) - new Date(a.issueDate);
         })
-        .slice(0, 5);
+        .slice(0, 6);
 
     return {
         totalClients,
