@@ -48,6 +48,14 @@ const createInvoice = (invoiceData) => {
         throw error;
     }
 
+    const clientExists = mockDb.clients.some((client) => client.id === clientId);
+
+    if (!clientExists) {
+        const error = new Error('Client not found');
+        error.status = 404;
+        throw error;
+    }
+
     // PRepare new invoice insert
     const newInvoice = {
         id: mockDb.invoices.length + 1,

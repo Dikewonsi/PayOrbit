@@ -14,6 +14,15 @@ const apiClient = async (path, options = {}) => {
 
     const data = await response.json();
 
+    if (response.status === 401) {
+        localStorage.removeItem('payorbit_token');
+        localStorage.removeItem('payorbit_admin');
+
+        window.location.href = '/login';
+        
+        throw new Error(data.message || 'Session expired. Please login again');
+    }
+
     if (!response.ok) {
         throw new Error(data.message || 'Something went wrong');
     }
