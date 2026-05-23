@@ -33,7 +33,37 @@ function Invoices () {
       return <div className="page-wrapper p-4 text-danger">{error}</div>
     }
 
-    const totalPages = Math.ceil(invoices.length / itemsPerPage);
+    const handleDeleteInvoice = async (invoiceId) => {
+      const confirmed = window.confirm('Are you sure you want to delete this invoice?');
+
+      if (!confirmed) {
+        return;
+      }
+
+      try {
+        setError('');
+        
+        await apiClient(`/invoices/${invoiceId}`, {
+          method: 'DELETE'
+        });
+
+        setInvoices((previousInvoices) => {
+          const updatedInvoices = previousInvoices.filter((invoice) => invoice.id !== invoiceId);
+          
+          const newTotalPages = Math.ceil(updatedInvoices.length / itemsPerPage);
+
+          if (currentPage > newTotalPages) {
+            setCurrentPage(newTotalPages || 1);
+          }
+
+          return updatedInvoices;
+        });
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    const totalPages = Math.max(1, Math.ceil(invoices.length / itemsPerPage));
 
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -121,6 +151,15 @@ function Invoices () {
                                 </tr>
                               </thead>
                               <tbody>
+                                {currentInvoices.length === 0 && (
+                                  <tr>
+                                    <td 
+                                      colSpan="10"
+                                      className="text-center text-secondary py-4">
+                                        No invoices found
+                                      </td>
+                                  </tr>
+                                )}
                                 {currentInvoices.map((invoice, index) => (
                                   <tr key={invoice.id}>
                                     <td>
@@ -141,8 +180,14 @@ function Invoices () {
                                       <span className="dropdown">
                                         <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                                         <div className="dropdown-menu dropdown-menu-end">
-                                          <a className="dropdown-item" href="#"> Action </a>
-                                          <a className="dropdown-item" href="#"> Another action </a>
+                                          <a className="dropdown-item" href="#"> Edit </a>
+                                          <button
+                                            className="dropdown-item text-danger"
+                                            type="button"
+                                            onClick={() => handleDeleteInvoice(invoice.id)}
+                                          >
+                                            Delete
+                                          </button>
                                         </div>
                                       </span>
                                     </td>
