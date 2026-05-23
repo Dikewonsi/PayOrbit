@@ -10,7 +10,6 @@ function CreateInvoice() {
 
   const [formData, setFormData] = useState({
     clientId: '',
-    invoiceNumber: '',
     title: '',
     amount: '',
     status: 'unpaid',
@@ -118,19 +117,6 @@ function CreateInvoice() {
                         </option>
                       ))}
                     </select>
-                  </div>
-
-                  <div className="col-md-6 mb-3">
-                    <label className="form-label required">Invoice Number</label>
-                    <input
-                      required
-                      type="text"
-                      className="form-control"
-                      placeholder="INV-001"
-                      name="invoiceNumber"
-                      value={formData.invoiceNumber}
-                      onChange={handleChange}
-                    />
                   </div>
 
                   <div className="col-md-6 mb-3">

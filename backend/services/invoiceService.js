@@ -20,9 +20,15 @@ const getInvoiceById = (id) => {
 };
 
 const createInvoice = (invoiceData) => {
+
+    const generateInvoiceNumber = () => {
+        const nextInvoiceId = mockDb.invoices.length + 1;
+
+        return `INV-${String(nextInvoiceId).padStart(3, '0')}`;
+    }
+
     const {
         clientId,
-        invoiceNumber,
         title,
         amount,
         status,
@@ -33,7 +39,6 @@ const createInvoice = (invoiceData) => {
     // Run basic validation
     if(
         !clientId ||
-        !invoiceNumber ||
         !title ||
         !amount ||
         !status ||
@@ -60,7 +65,7 @@ const createInvoice = (invoiceData) => {
     const newInvoice = {
         id: mockDb.invoices.length + 1,
         clientId,
-        invoiceNumber,
+        invoiceNumber: generateInvoiceNumber(),
         title,
         amount,
         status,
