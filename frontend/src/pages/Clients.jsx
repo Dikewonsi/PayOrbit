@@ -33,7 +33,37 @@ function Clients () {
     return <div className='page-wrapper p-4 text-danger'>{error}</div>
   }
 
-  const totalPages = Math.ceil(clients.length / itemsPerPage);
+  const handleDeleteClient = async (clientId) => {
+    const confirmed = window.confirm('Are you sure you want to delete this client?');
+
+    if(!confirmed) {
+      return;
+    }
+
+    try {
+      setError('');
+
+      await apiClient(`/clients/${clientId}`, {
+        method: 'DELETE'
+      });
+
+      setClients((previousClients) => {
+        const updatedClients = previousClients.filter((client) => client.id !== clientId);
+        
+        const newTotalPages = Math.ceil(updatedClients.length / itemsPerPage);
+
+        if(currentPage > newTotalPages) {
+          setCurrentPage(newTotalPages || 1);
+        }
+
+        return updatedClients;
+      });
+    } catch (error) {
+      setError(error.message)
+    }
+  }
+
+  const totalPages = Math.max(1, Math.ceil(clients.length / itemsPerPage));
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -120,8 +150,14 @@ function Clients () {
                                       <span className="dropdown">
                                         <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                                         <div className="dropdown-menu dropdown-menu-end">
-                                          <a className="dropdown-item" href="#"> Action </a>
-                                          <a className="dropdown-item" href="#"> Another action </a>
+                                          <a className="dropdown-item" href="#"> Edit </a>
+                                          <button
+                                            className="dropdown-item text-danger"
+                                            type="button"
+                                            onClick={() => handleDeleteClient(client.id)}
+                                            >
+                                              Delete
+                                          </button>
                                         </div>
                                       </span>
                                     </td>
