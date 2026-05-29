@@ -1,8 +1,8 @@
 import clientService from '../services/clientService.js';
 
-const getClients =( req, res, next ) => {
+const getClients = async ( req, res, next ) => {
     try {
-        const clients = clientService.getAllClients();
+        const clients = await clientService.getAllClients();
 
         res.status(200).json({
             success: true,
@@ -17,9 +17,9 @@ const getClients =( req, res, next ) => {
     }
 };
 
-const getClient = ( req, res, next ) => {
+const getClient = async ( req, res, next ) => {
     try {
-        const client = clientService.getClientById(req.params.id);
+        const client = await clientService.getClientById(req.params.id);
 
         res.status(200).json({
             success: true,
@@ -33,9 +33,9 @@ const getClient = ( req, res, next ) => {
     }
 };
 
-const createClient = ( req, res, next ) => {
+const createClient = async ( req, res, next ) => {
     try {
-        const client = clientService.createClient(req.body);
+        const client = await clientService.createClient(req.body);
 
         res.status(201).json({
             success: true,
@@ -49,9 +49,9 @@ const createClient = ( req, res, next ) => {
     }
 };
 
-const updateClient = ( req, res, next ) => {
+const updateClient = async ( req, res, next ) => {
     try {
-        const client = clientService.updateClient(req.params.id, req.body);
+        const client = await clientService.updateClient(req.params.id, req.body);
 
         res.status(200).json({
             success: true,
@@ -65,9 +65,9 @@ const updateClient = ( req, res, next ) => {
     }
 };
 
-const deleteClient = ( req, res, next ) => {
+const deleteClient = async ( req, res, next ) => {
     try {
-        const client = clientService.deleteClient(req.params.id);
+        const client = await clientService.deleteClient(req.params.id);
 
         res.status(200).json({
             success: true,

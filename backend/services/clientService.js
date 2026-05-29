@@ -1,25 +1,51 @@
-import mockDb from '../models/mockDb.js';
+import pool from '../config/db.js';
 
-const getAllClients = () => {
-    return mockDb.clients; 
+const getAllClients = async () => {
+    const result = await pool.query(`
+        SELECT
+            id,
+            name,
+            email,
+            phone,
+            company,
+            address,
+            TO_CHAR(date_added, 'YYYY-MM-DD') AS "dateAdded"
+        FROM clients
+        ORDER BY id DESC
+    `);
+
+    return result.rows;
 };
 
-const getClientById = (id) => {
-    const clientId = Number(id);
+const getClientById = async (id) => {
+    const result = await pool.query(
+        `
+        SELECT 
+            id,
+            name,
+            email,
+            phone,
+            company,
+            address,
+            TO_CHAR(date_added, 'YYYY-MM-DD') AS "dateAdded"
+        FROM clients
+        WHERE id = $1
+        `,
+        [id]
+    );
 
-    // find client where id is equal to the id of the arrow function created
-    const client = mockDb.clients.find((client) => client.id === clientId);
+    const client = result.rows[0];
 
     if (!client) {
         const error = new Error('Client not found');
         error.status = 404;
-        throw error;
+        throw error; 
     }
 
     return client;
 }
 
-const createClient = (clientData) => {
+const createClient = async (clientData) => {
     const { name, email, phone, company, address, dateAdded } = clientData;
 
     // Check for emptiness in forms. later on would make more secure.
@@ -29,50 +55,87 @@ const createClient = (clientData) => {
         throw error;
     }
 
-    // Prepare insert 
-    const newClient = {
-        id: mockDb.clients.length + 1,
-        name,
-        email,
-        phone,
-        company,
-        address,
-        dateAdded
-    }
+    const result = await pool.query(
+        `
+            INSERT INTO clients (name, email, phone, company, address, date_added)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING
+                id,
+                name,
+                email,
+                phone,
+                company,
+                address,
+                TO_CHAR(date_added, 'YYYY-MM-DD') AS "dateAdded"
+        `,
+        [name, email, phone, company, address, dateAdded]
+    );
 
-    // add client to mock DB
-    mockDb.clients.push(newClient);
-
-    return newClient;
+    return result.rows[0];
 };
 
-const updateClient = (id, clientData) => {
-    const client = getClientById(id);
+const updateClient = async (id, clientData) => {
 
-    client.name = clientData.name ?? client.name;
-    client.email = clientData.email ?? client.email;
-    client.phone = clientData.phone ?? client.phone;
-    client.company = clientData.company ?? client.company;
-    client.address = clientData.address ?? client.address;
-    client.dateAdded = clientData.dateAdded ?? client.dateAdded;
+    const existingClient = await getClientById(id);
 
-    return client;
+    const name = clientData.name ?? existingClient.name;
+    const email = clientData.email ?? existingClient.email;
+    const phone = clientData.phone ?? existingClient.phone;
+    const company = clientData.company ?? existingClient.company;
+    const address = clientData.address ?? existingClient.address;
+    const dateAdded = clientData.dateAdded ?? existingClient.dateAdded;
+
+    const result = await pool.query(
+        `
+        UPDATE clients
+        SET
+            name = $1,
+            email = $2,
+            phone = $3,
+            company = $4,
+            address = $5,
+            date_added = $6
+        WHERE id = $7
+        RETURNING 
+            id,
+            name,
+            email,
+            phone,
+            company,
+            address,
+            TO_CHAR(date_added, 'YYYY-MM-DD') AS "dateAdded"
+        `,
+        [name, email, phone, company, address, dateAdded, id]
+    )
+
+    return result.rows[0];
 }
 
-const deleteClient = (id) => {
-    const clientId = Number(id);
+const deleteClient = async (id) => {
+    const result = await pool.query(
+        `
+        DELETE FROM clients
+        WHERE id = $1
+        RETURNING
+            id,
+            email,
+            phone,
+            company,
+            address,
+            TO_CHAR(date_added, 'YYYY-MM-DD') AS "dateAdded"
+        `,
+        [id]
+    );
 
-    const clientIndex = mockDb.clients.findIndex((client) => client.id === clientId);
+    const deletedClient = result.rows[0];
 
-    if(clientIndex === -1) {
+    if(!deletedClient) {
         const error = new Error('Client not found');
         error.status = 404;
         throw error;
     }
 
-    const deletedClient = mockDb.clients.splice(clientIndex, 1);
-
-    return deletedClient[0];
+    return deletedClient;
 };
 
 export default {

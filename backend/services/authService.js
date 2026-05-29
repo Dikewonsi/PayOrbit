@@ -1,10 +1,25 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
-import mockDb from '../models/mockDb.js';
+import pool from '../config/db.js';
 
 const loginAdmin = async (email, password) => {
-    const admin = mockDb.admins.find((admin => admin.email === email));
+   
+    const result = await pool.query(
+        `
+            SELECT 
+                id,
+                name,
+                email,
+                password_hash AS "passwordHash",
+                role
+            FROM admins
+            WHERE email = $1
+        `,
+        [email]
+    );
+
+    const admin = result.rows[0];
 
     if(!admin) {
         const error = new Error('Invalid email or password');
