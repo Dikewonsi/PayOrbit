@@ -82,13 +82,13 @@ const createInvoice = (invoiceData) => {
 const updateInvoice = (id, invoiceData) => {
     const invoice = getInvoiceById(id);
 
-    invoice.clientId = invoiceData.clientId || invoice.clientId; 
-    invoice.invoiceNumber = invoiceData.invoiceNumber || invoice.invoiceNumber;
-    invoice.title = invoiceData.title || invoice.title;
-    invoice.amount = invoiceData.amount || invoice.amount;
-    invoice.status = invoiceData.status || invoice.status;
-    invoice.issueDate = invoiceData.issueDate || invoice.issueDate;
-    invoice.dueDate = invoiceData.dueDate || invoice.dueDate;
+    invoice.clientId = invoiceData.clientId ?? invoice.clientId; 
+    invoice.invoiceNumber = invoiceData.invoiceNumber ?? invoice.invoiceNumber;
+    invoice.title = invoiceData.title ?? invoice.title;
+    invoice.amount = invoiceData.amount ?? invoice.amount;
+    invoice.status = invoiceData.status ?? invoice.status;
+    invoice.issueDate = invoiceData.issueDate ?? invoice.issueDate;
+    invoice.dueDate = invoiceData.dueDate ?? invoice.dueDate;
 
     return invoice;
 }

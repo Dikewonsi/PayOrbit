@@ -150,7 +150,12 @@ function Clients () {
                                       <span className="dropdown">
                                         <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                                         <div className="dropdown-menu dropdown-menu-end">
-                                          <a className="dropdown-item" href="#"> Edit </a>
+                                          <a 
+                                            className="dropdown-item" 
+                                            href={`/clients/${client.id}/edit`}
+                                          >
+                                             Edit
+                                          </a>
                                           <button
                                             className="dropdown-item text-danger"
                                             type="button"

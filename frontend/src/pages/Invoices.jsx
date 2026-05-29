@@ -1,7 +1,28 @@
 import { useEffect, useState } from 'react';
 import apiClient from '../api/apiClient';
 
-function Invoices () {
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-NG', {
+    style: 'currency',
+    currency: 'NGN',
+    maximumFractionDigits: 0
+  }).format(amount);
+};
+
+function statusClass(status) {
+  return {
+    paid: "success",
+    pending: "warning",
+    overdue: "danger",
+    sent: "primary",
+    Paid: "success",
+    Pending: "warning",
+    Overdue: "danger",
+    Sent: "primary",
+  }[status] || "secondary";
+}
+
+const Invoices = () => {
 
     const [invoices, setInvoices] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -172,15 +193,20 @@ function Invoices () {
                                     <td>{invoice.clientId}</td>
                                     <td>{invoice.invoiceNumber}</td>
                                     <td>{invoice.title}</td>
-                                    <td>{invoice.amount}</td>
-                                    <td>{invoice.status}</td>
+                                    <td>{formatCurrency(invoice.amount)}</td>
+                                    <td><span className={`badge bg-${statusClass(invoice.status)} me-1`}></span>{invoice.status}</td>
                                     <td>{invoice.issueDate}</td>
                                     <td>{invoice.dueDate}</td>
                                     <td>
                                       <span className="dropdown">
                                         <button className="btn dropdown-toggle align-text-top" data-bs-boundary="viewport" data-bs-toggle="dropdown">Actions</button>
                                         <div className="dropdown-menu dropdown-menu-end">
-                                          <a className="dropdown-item" href="#"> Edit </a>
+                                          <a 
+                                            className="dropdown-item" 
+                                            href={`/invoices/${invoice.id}/edit`}
+                                          > 
+                                            Edit                                          
+                                          </a>
                                           <button
                                             className="dropdown-item text-danger"
                                             type="button"
@@ -263,4 +289,4 @@ function Invoices () {
     )
 }
 
-export default Invoices
+export default Invoices;

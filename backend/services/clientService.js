@@ -1,7 +1,7 @@
 import mockDb from '../models/mockDb.js';
 
 const getAllClients = () => {
-    return mockDb.clients;
+    return mockDb.clients; 
 };
 
 const getClientById = (id) => {
@@ -49,9 +49,12 @@ const createClient = (clientData) => {
 const updateClient = (id, clientData) => {
     const client = getClientById(id);
 
-    client.name = clientData.name || client.name;
-    client.address = clientData.address || client.address;
-    client.date = clientData.date || client.date;
+    client.name = clientData.name ?? client.name;
+    client.email = clientData.email ?? client.email;
+    client.phone = clientData.phone ?? client.phone;
+    client.company = clientData.company ?? client.company;
+    client.address = clientData.address ?? client.address;
+    client.dateAdded = clientData.dateAdded ?? client.dateAdded;
 
     return client;
 }

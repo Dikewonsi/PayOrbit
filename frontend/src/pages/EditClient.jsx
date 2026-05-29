@@ -1,0 +1,200 @@
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import apiClient from '../api/apiClient';
+
+function EditClient() {
+
+    const navigate = useNavigate();
+    const { id } = useParams();
+
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        address: '',
+        dateAdded: ''
+    });
+
+    const [loading, setLoading] = useState(true);
+    const [submitting, setSubmitting] = useState(false);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+        const getClient = async () => {
+            try {
+                const response = await apiClient(`/clients/${id}`);
+                const client = response.data.client;
+
+                setFormData({
+                    name: client.name,
+                    email: client.email,
+                    phone: client.phone,
+                    company: client.company,
+                    address: client.address,
+                    dateAdded: client.dateAdded
+                })
+            } catch (error) {
+                setError(error.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        getClient();
+    }, [id]);
+
+    const handleChange = (event) => {
+        const { name, value } = event.target;
+
+        setFormData((previousData) => ({
+            ...previousData,
+            [name]: value
+        }));
+    }; 
+    
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        try {
+            setError('');
+            setSubmitting(true);
+
+            await apiClient(`/clients/${id}`, {
+                method: 'PUT',
+                body: JSON.stringify(formData)
+            });
+
+            navigate('/clients');
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    if(loading) {
+        return <div className="page-wrapper p-4">Loading Client...</div>;
+    }
+
+    return (
+    <div className="page-wrapper">
+      <div className="page-header d-print-none">
+        <div className="container-xl">
+          <h2 className="page-title">Edit Client</h2>
+        </div>
+      </div>
+
+      <div className="page-body">
+        <div className="container-xl">
+          <div className="card">
+            <div className="card-header">
+              <h3 className="card-title">Client Information</h3>
+            </div>
+
+            <div className="card-body">
+                {error && (
+                    <div className="alert alert-danger" role="alert">
+                        {error}
+                    </div>
+
+                )}
+              <form onSubmit={handleSubmit}>
+                <div className="row">
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label required">Full Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      className="form-control"
+                      placeholder="John Doe"
+                      value={formData.name}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label required">Email Address</label>
+                    <input
+                      type="email"
+                      name="email"
+                      className="form-control"
+                      placeholder="john@example.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Phone Number</label>
+                    <input
+                      type="text"
+                      name="phone"
+                      className="form-control"
+                      placeholder="+234 800 000 0000"
+                      value={formData.phone}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Company</label>
+                    <input
+                      type="text"
+                      name="company"
+                      className="form-control"
+                      placeholder="Acme Inc."
+                      value={formData.company}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Address</label>
+                    <input
+                      type="text"
+                      name="address"
+                      className="form-control"
+                      placeholder="Manhattan, New York"
+                      value={formData.address}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="col-md-6 mb-3">
+                    <label className="form-label">Date Added</label>
+                    <input
+                      type="date"
+                      name="dateAdded"
+                      className="form-control"
+                      placeholder="Acme Inc."
+                      value={formData.dateAdded}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="card-footer bg-transparent mt-3 px-0 pb-0">
+                  <button type="submit" className="btn btn-primary" disabled={submitting}>
+                    {submitting ? 'Editing...' : 'Edit Client'}
+                  </button>
+                  
+                  <button 
+                    type="button" 
+                    className="btn btn-link"
+                    onClick={() => navigate('/clients')}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default EditClient;

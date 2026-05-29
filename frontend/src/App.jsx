@@ -15,6 +15,8 @@ import Clients from "./pages/Clients";
 import Invoices from "./pages/Invoices";
 import CreateInvoice from "./pages/CreateInvoice";
 import CreateClient from "./pages/CreateClient";
+import EditInvoice from './pages/EditInvoice';
+import EditClient from "./pages/EditClient";
 
 const App = () => {
     const router = createBrowserRouter(
@@ -29,7 +31,9 @@ const App = () => {
                 <Route path="/clients" element={<Clients />} />
                 <Route path="/invoices" element={<Invoices />} />
                 <Route path="/invoices/create" element={<CreateInvoice />} />
+                <Route path="/invoices/:id/edit" element={<EditInvoice />} />
                 <Route path="/clients/create" element={<CreateClient />} />
+                <Route path="/clients/:id/edit" element={<EditClient />} />
             </Route>
           </Route>
         </>
