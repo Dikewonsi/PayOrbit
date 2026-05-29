@@ -1,8 +1,8 @@
 import dashboardService  from "../services/dashboardService.js";
 
-const getDashboard = ( req, res, next ) => {
+const getDashboard = async ( req, res, next ) => {
     try {
-        const summary = dashboardService.getDashboardSummary();
+        const summary = await dashboardService.getDashboardSummary();
 
         res.status(200).json({
             success:true,

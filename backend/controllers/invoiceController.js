@@ -1,8 +1,8 @@
 import invoiceService from '../services/invoiceService.js';
 
-const getInvoices = ( req, res, next ) => {
+const getInvoices =  async( req, res, next ) => {
     try {
-        const invoices = invoiceService.getAllInvoices();
+        const invoices = await invoiceService.getAllInvoices();
 
         res.status(200).json({
             success: true,
@@ -17,9 +17,9 @@ const getInvoices = ( req, res, next ) => {
     }
 };
 
-const getInvoice = ( req, res, next ) => {
+const getInvoice = async ( req, res, next ) => {
     try {
-        const invoice = invoiceService.getInvoiceById(req.params.id);
+        const invoice = await invoiceService.getInvoiceById(req.params.id);
 
         res.status(200).json({
             success: true,
@@ -33,9 +33,9 @@ const getInvoice = ( req, res, next ) => {
     }
 };
 
-const createInvoice = ( req, res, next ) => {
+const createInvoice = async ( req, res, next ) => {
     try {
-        const invoice = invoiceService.createInvoice(req.body);
+        const invoice = await invoiceService.createInvoice(req.body);
 
         res.status(201).json({
             success: true,
@@ -49,9 +49,9 @@ const createInvoice = ( req, res, next ) => {
     }
 };
 
-const updateInvoice = ( req, res, next ) => {
+const updateInvoice = async ( req, res, next ) => {
     try {
-        const invoice = invoiceService.updateInvoice(req.params.id, req.body);
+        const invoice = await invoiceService.updateInvoice(req.params.id, req.body);
 
         res.status(200).json({
             success: true,
@@ -65,9 +65,9 @@ const updateInvoice = ( req, res, next ) => {
     }
 };
 
-const deleteInvoice = ( req, res, next ) => {
+const deleteInvoice = async ( req, res, next ) => {
     try {
-        const invoice = invoiceService.deleteInvoice(req.params.id);
+        const invoice = await invoiceService.deleteInvoice(req.params.id);
         
         res.status(200).json({
             success: true,

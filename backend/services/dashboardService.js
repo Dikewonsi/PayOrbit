@@ -1,35 +1,60 @@
-import mockDb from '../models/mockDb.js';
+import pool from '../config/db.js';
 
-const getDashboardSummary = () => {
-    const totalClients = mockDb.clients.length;
-    const totalInvoices = mockDb.invoices.length;
+const getDashboardSummary = async () => {
 
-    const paidInvoices = mockDb.invoices.filter((invoice) => {
-        return invoice.status === 'paid';
-    });
+    const totalClientsResult = await pool.query(
+        `SELECT COUNT(*)::int AS count
+        FROM clients`
+    );
 
-    const unpaidInvoices = mockDb.invoices.filter((invoice) => {
-        return invoice.status === 'unpaid';
-    });
+    const totalInvoicesResult = await pool.query(
+        `SELECT COUNT(*)::int AS count
+        FROM invoices`
+    );
 
-    const totalRevenue = paidInvoices.reduce((total, invoice) => {
-        return total + invoice.amount;
-    }, 0);
+    const paidInvoiceResult = await pool.query(
+        `SELECT COUNT(*)::int AS count
+        FROM invoices
+        WHERE status = 'paid'`
+    );
 
-    // sorts invoices from newest to oldest
-    const recentInvoices = [...mockDb.invoices]
-        .sort((a, b) => {
-            return new Date(b.issueDate) - new Date(a.issueDate);
-        })
-        .slice(0, 6);
+    const unpaidInvoiceResult = await pool.query(
+        `SELECT COUNT(*)::int AS count
+        FROM invoices
+        WHERE status = 'unpaid'
+        `
+    );
+
+    const totalRevenueResult = await pool.query(
+        `
+            SELECT COALESCE(SUM(amount), 0)::int AS total
+            FROM invoices
+            WHERE status = 'paid'
+        `
+    )
+
+    const recentInvoicesResult = await pool.query(`
+        SELECT
+            id,
+            client_id AS "clientId",
+            invoice_number AS "invoiceNumber",
+            title,
+            amount,
+            status,
+            issue_date AS "issueDate",
+            due_date AS "dueDate"
+        FROM invoices
+        ORDER BY issue_date DESC
+        LIMIT 6
+    `);
 
     return {
-        totalClients,
-        totalInvoices,
-        paidInvoices: paidInvoices.length,
-        unpaidInvoices: unpaidInvoices.length,
-        totalRevenue,
-        recentInvoices
+        totalClients: totalClientsResult.rows[0].count,
+        totalInvoices: totalInvoicesResult.rows[0].count,
+        paidInvoices: paidInvoiceResult.rows[0].count,
+        unpaidInvoices: unpaidInvoiceResult.rows[0].count,
+        totalRevenue: totalRevenueResult.rows[0].total,
+        recentInvoices: recentInvoicesResult.rows
     };
 };
 
