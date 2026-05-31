@@ -132,7 +132,7 @@ const updateInvoice = async (id, invoiceData) => {
     );
 
     if(!clientResult.rows[0]) {
-        const error = new Error('CLient not found');
+        const error = new Error('Client not found');
         error.status = 400;
         throw error;
     }

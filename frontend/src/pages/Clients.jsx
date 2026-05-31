@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import apiClient from '../api/apiClient';
+import { useNotification } from '../context/NotificationContext';
 
 function Clients () {
 
@@ -8,6 +9,8 @@ function Clients () {
   const itemsPerPage = 10;
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  const { showNotification } = useNotification();
 
   useEffect(() => {
     const getClients = async () => {
@@ -43,9 +46,11 @@ function Clients () {
     try {
       setError('');
 
-      await apiClient(`/clients/${clientId}`, {
+      const response = await apiClient(`/clients/${clientId}`, {
         method: 'DELETE'
       });
+
+      showNotification('success', response.message);
 
       setClients((previousClients) => {
         const updatedClients = previousClients.filter((client) => client.id !== clientId);
@@ -60,6 +65,7 @@ function Clients () {
       });
     } catch (error) {
       setError(error.message)
+      showNotification('error', error.message);
     }
   }
 

@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import apiClient from '../api/apiClient';
+import { useNotification } from '../context/NotificationContext';
 
 function EditClient() {
 
     const navigate = useNavigate();
+    const { showNotification } = useNotification();
     const { id } = useParams();
 
     const [formData, setFormData] = useState({
@@ -61,16 +63,18 @@ function EditClient() {
             setError('');
             setSubmitting(true);
 
-            await apiClient(`/clients/${id}`, {
+            const response = await apiClient(`/clients/${id}`, {
                 method: 'PUT',
                 body: JSON.stringify(formData)
             });
 
+            showNotification('success', response.message);
             navigate('/clients');
         } catch (error) {
             setError(error.message);
+            showNotification('error', error.message);
         } finally {
-            setLoading(false);
+            setSubmitting(false);
         }
     }
 

@@ -2,11 +2,14 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import apiClient from '../api/apiClient';
+import { useNotification } from '../context/NotificationContext';
 
 
 function CreateClient() {
 
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
+  
 
   const [formData, setFormData] = useState({
     name: '',
@@ -36,14 +39,16 @@ function CreateClient() {
       setError('');
       setLoading(true);
 
-      await apiClient('/clients', {
+      const response = await apiClient('/clients', {
         method: 'POST',
         body: JSON.stringify(formData)
       });
 
+      showNotification('success', response.message)
       navigate('/clients');
     } catch (error) {
       setError(error.message);
+      showNotification('error', error.message);
     } finally {
       setLoading(false);
     }

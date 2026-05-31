@@ -2,11 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import apiClient from '../api/apiClient';
+import { useNotification } from '../context/NotificationContext';
 
 
 function CreateInvoice() {
 
   const navigate = useNavigate();
+  const { showNotification } = useNotification();
+
 
   const [formData, setFormData] = useState({
     clientId: '',
@@ -53,7 +56,7 @@ function CreateInvoice() {
       setError('');
       setSubmitting(true);
 
-      await apiClient('/invoices', {
+      const response = await apiClient('/invoices', {
         method: 'POST',
         body: JSON.stringify({
           ...formData,
@@ -62,9 +65,11 @@ function CreateInvoice() {
         })
       });
 
+      showNotification('success', response.message);
       navigate('/invoices');
     } catch (error) {
       setError(error.message);
+      showNotification('error', error.message);
     } finally {
       setSubmitting(false);
     }
