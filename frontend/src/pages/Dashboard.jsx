@@ -205,21 +205,33 @@ function Dashboard() {
 
     
   return (
-    <div className="page">
+    <div
+      className="page min-vh-100"
+      style={{
+        background:
+          "radial-gradient(circle at top left, rgba(32, 107, 196, 0.14), transparent 34%), linear-gradient(135deg, #f8fbff 0%, #eef4ff 45%, #ffffff 100%)",
+      }}
+    >
       <div className="page-wrapper">
-        <div className="page-header d-print-none">
-          <div className="container-xl">
-            <div className="row g-2 align-items-center">
+        <div className="page-header d-print-none border-0">
+          <div className="container-xl py-4">
+            <div className="row g-3 align-items-center">
               <div className="col">
-                <div className="page-pretitle">Overview</div>
-                <h2 className="page-title">Dashboard</h2>
+                <span className="badge bg-primary-lt text-primary rounded-pill px-3 py-2 mb-3">
+                  Overview
+                </span>
+                <h1 className="fw-bold mb-1">Dashboard</h1>
+                <p className="text-secondary mb-0">
+                  Track clients, invoices, payments, and collection performance.
+                </p>
               </div>
+
               <div className="col-auto ms-auto d-print-none">
                 <div className="btn-list">
-                  <a href="/clients/create" className="btn btn-outline-primary">
+                  <a href="/clients/create" className="btn btn-white rounded-4 shadow-sm">
                     New client
                   </a>
-                  <a href="/invoices/create" className="btn btn-primary">
+                  <a href="/invoices/create" className="btn btn-primary rounded-4 shadow-sm">
                     Create invoice
                   </a>
                 </div>
@@ -228,48 +240,66 @@ function Dashboard() {
           </div>
         </div>
 
-        <div className="page-body">
-          <div className="container-xl">
+        <div className="page-body mt-0">
+          <div className="container-xl pb-5">
             <div className="row row-deck row-cards">
               {stats.map((stat) => (
                 <StatCard key={stat.title} stat={stat} />
               ))}
             </div>
-            <div className="row row-cards mt-3">
-              <div className="col-lg-9">
-                <div className="card">
-                  <div className="card-header">
+
+            <div className="row row-cards mt-4">
+              <div className="col-lg-8">
+                <div className="card border-0 shadow-sm rounded-5 overflow-hidden">
+                  <div className="card-header border-0 bg-white p-4">
                     <div>
-                      <h3 className="card-title">Recent invoices</h3>
-                      <p className="card-subtitle">Latest client billing activity</p>
+                      <h3 className="card-title fw-bold mb-1">Recent invoices</h3>
+                      <p className="text-secondary mb-0">
+                        Latest client billing activity
+                      </p>
                     </div>
+
                     <div className="card-actions">
-                      <a href="/invoices" className="btn btn-2">
+                      <a href="/invoices" className="btn btn-light rounded-4">
                         View all
                       </a>
                     </div>
                   </div>
+
                   <div className="table-responsive">
-                    <table className="table card-table table-vcenter text-nowrap">
-                      <thead>
+                    <table className="table card-table table-vcenter text-nowrap mb-0">
+                      <thead className="bg-light">
                         <tr>
-                          <th>Invoice</th>
-                          <th>Title</th>
-                          <th>Client</th>
-                          <th>Amount</th>
-                          <th>Status</th>
-                          <th>Due Date</th>
+                          <th className="text-secondary fw-semibold">Invoice</th>
+                          <th className="text-secondary fw-semibold">Title</th>
+                          <th className="text-secondary fw-semibold">Client</th>
+                          <th className="text-secondary fw-semibold">Amount</th>
+                          <th className="text-secondary fw-semibold">Status</th>
+                          <th className="text-secondary fw-semibold">Due Date</th>
                         </tr>
                       </thead>
+
                       <tbody>
                         {recentInvoices.map((invoice) => (
                           <tr key={invoice.id}>
-                            <td className='text-secondary'>{invoice.invoiceNumber}</td>
-                            <td>{invoice.title}</td>
-                            <td>{invoice.clientId}</td>
-                            <td>{formatCurrency(invoice.amount)}</td>
-                            <td><span className={`badge bg-${statusClass(invoice.status)} me-1`}></span>{invoice.status}</td>
-                            <td>{invoice.dueDate}</td>
+                            <td className="text-primary fw-semibold">
+                              {invoice.invoiceNumber}
+                            </td>
+                            <td className="fw-medium">{invoice.title}</td>
+                            <td className="text-secondary">{invoice.clientId}</td>
+                            <td className="fw-semibold">
+                              {formatCurrency(invoice.amount)}
+                            </td>
+                            <td>
+                              <span
+                                className={`badge bg-${statusClass(
+                                  invoice.status
+                                )}-lt text-${statusClass(invoice.status)} rounded-pill px-3 py-2`}
+                              >
+                                {invoice.status}
+                              </span>
+                            </td>
+                            <td className="text-secondary">{invoice.dueDate}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -278,33 +308,81 @@ function Dashboard() {
                 </div>
               </div>
 
-              <div className="col-lg-3">
-                <div className="card">
-                  <div className="card-body">
-                    <h3 className="card-title">Collections health</h3>
-                    <div className="d-flex align-items-center mb-2">
-                      <div className="subheader">Paid vs outstanding</div>
-                      <div className="ms-auto text-secondary">{paidPercent}%</div>
-                    </div>
-                    <div className="progress progress-separated mb-3">
-                      <div className="progress-bar bg-success" style={{ width: `${paidPercent}%` }} aria-label="Paid"></div>
-                      <div className="progress-bar bg-warning" style={{ width: `${unpaidPercent}%` }} aria-label="Outstanding"></div>
-                    </div>
-                    <div className="row g-2">
-                      <div className="col">
-                        <div className="h3 mb-0">{formatCurrency(summary.totalRevenue)}</div>
-                        <div className="text-secondary">Collected</div>
+              <div className="col-lg-4">
+                <div className="card border-0 shadow-sm rounded-5 mb-4">
+                  <div className="card-body p-4">
+                    <div className="d-flex align-items-start justify-content-between mb-4">
+                      <div>
+                        <h3 className="card-title fw-bold mb-1">
+                          Collections health
+                        </h3>
+                        <p className="text-secondary mb-0">
+                          Paid invoices compared to outstanding invoices.
+                        </p>
                       </div>
-                      <div className="col">
-                        <div className="h3 mb-0">{summary.unpaidInvoices}</div>
-                        <div className="text-secondary">Open Invoices</div>
+
+                      <span className="badge bg-success-lt text-success rounded-pill px-3 py-2">
+                        {paidPercent}%
+                      </span>
+                    </div>
+
+                    <div className="progress progress-separated mb-4" style={{ height: "10px" }}>
+                      <div
+                        className="progress-bar bg-success"
+                        style={{ width: `${paidPercent}%` }}
+                        aria-label="Paid"
+                      ></div>
+                      <div
+                        className="progress-bar bg-warning"
+                        style={{ width: `${unpaidPercent}%` }}
+                        aria-label="Outstanding"
+                      ></div>
+                    </div>
+
+                    <div className="row g-3">
+                      <div className="col-6">
+                        <div className="p-3 rounded-4 bg-light">
+                          <div className="h3 fw-bold mb-1">
+                            {formatCurrency(summary.totalRevenue)}
+                          </div>
+                          <div className="text-secondary small">Collected</div>
+                        </div>
+                      </div>
+
+                      <div className="col-6">
+                        <div className="p-3 rounded-4 bg-light">
+                          <div className="h3 fw-bold mb-1">
+                            {summary.unpaidInvoices}
+                          </div>
+                          <div className="text-secondary small">Open invoices</div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Over Due Invoices Here*/}
+                <div className="card border-0 shadow-sm rounded-5">
+                  <div className="card-body p-4">
+                    <h3 className="card-title fw-bold mb-1">Quick actions</h3>
+                    <p className="text-secondary mb-4">
+                      Manage common billing tasks faster.
+                    </p>
 
+                    <div className="d-grid gap-2">
+                      <a href="/invoices/create" className="btn btn-primary rounded-4">
+                        Create new invoice
+                      </a>
+                      <a href="/clients/create" className="btn btn-light rounded-4">
+                        Add new client
+                      </a>
+                      <a href="/invoices" className="btn btn-light rounded-4">
+                        Review invoices
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Overdue invoices can go here */}
               </div>
             </div>
           </div>

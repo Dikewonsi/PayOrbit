@@ -41,8 +41,8 @@ const getDashboardSummary = async () => {
             title,
             amount,
             status,
-            issue_date AS "issueDate",
-            due_date AS "dueDate"
+            TO_CHAR(issue_date, 'YYYY-MM-DD') AS "issueDate",
+            TO_CHAR(due_date, 'YYYY-MM-DD') AS "dueDate"
         FROM invoices
         ORDER BY issue_date DESC
         LIMIT 6
