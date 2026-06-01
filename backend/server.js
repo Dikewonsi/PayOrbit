@@ -36,8 +36,13 @@ app.use(express.urlencoded({
 }));
 
 // Add cors so frontend and backend can communicate
+const allowedOrigins = [
+    'http://localhost:5173',
+    'https://payorbit.dikewonsi.cloud'
+];
+
 app.use(cors({
-    origin: 'http://localhost:5173'
+    origin: allowedOrigins
 }));
 
 /*

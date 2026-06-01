@@ -2,10 +2,10 @@
   "name": "payorbit-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "node server",
-    "dev": "node --watch --env-file=.env server"
+    "start": "node --env-file=.env server.js",
+    "dev": "node --watch --env-file=.env server.js"
   },
   "keywords": [],
   "author": "",
