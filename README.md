@@ -4,6 +4,40 @@ PayOrbit is a full-stack invoice and client management application built with Re
 
 Live demo: `https://payorbit.dikewonsi.cloud`
 
+## Screenshots
+
+### Login
+
+![PayOrbit login screen](Screenshots/login.png)
+
+### Dashboard
+
+![PayOrbit dashboard overview](Screenshots/dashboard.png)
+
+### Clients
+
+![PayOrbit clients table](Screenshots/clients.png)
+
+### Create Client
+
+![PayOrbit create client form](Screenshots/create-client.png)
+
+### Edit Client
+
+![PayOrbit edit client form](Screenshots/edit-client.png)
+
+### Invoices
+
+![PayOrbit invoices table](Screenshots/invoices.png)
+
+### Create Invoice
+
+![PayOrbit create invoice form](Screenshots/create-invoice.png)
+
+### Edit Invoice
+
+![PayOrbit edit invoice form](Screenshots/edit-invoice.png)
+
 ## Features
 
 - Admin login with JWT authentication
