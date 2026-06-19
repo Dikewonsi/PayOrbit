@@ -6,6 +6,7 @@ import authRoutes from './routes/authRoutes.js';
 import clientRoutes from './routes/clientRoutes.js';
 import invoiceRoutes from './routes/invoiceRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import paymentRoutes from './routes/paymentRoutes.js';
 
 import notFound from './middleware/notFound.js';
 import errorHandler from './middleware/errorHandler.js';
@@ -55,6 +56,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/clients', clientRoutes);
 app.use('/api/invoices', invoiceRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api', paymentRoutes);
 
 /*
 |--------------------------------------------------------------------------
